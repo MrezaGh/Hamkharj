@@ -11,7 +11,7 @@ class Expense(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, models.CASCADE, related_name="other"
     )
-    amount = models.DecimalField(name="Amount", max_digits=9, decimal_places=0)
+    amount = models.DecimalField(max_digits=9, decimal_places=0)
     description = models.TextField(blank=True)
 
     date_added = models.DateTimeField(auto_now_add=True)

@@ -8,6 +8,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("", include("expense.urls")),
     path("group/", include("group.urls")),
+    path("panel/", include("panel.urls")),
 ]
 
 if settings.DEBUG:

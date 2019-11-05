@@ -4,5 +4,12 @@
 {% block title %}Home page{% endblock title %}
 
 {% block content %}
-    <h1>Home page</h1>
+<h1>Home page</h1>
+{% for expense in expenses %}
+<div>
+    <h1>
+        {{expense.creator.first_name}}
+    </h1>
+</div>
+{% endfor %}
 {% endblock content %}
