@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     # Local
     'users',
-    'panel',
+    'expense',
 ]
 
 MIDDLEWARE = [
