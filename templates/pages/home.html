@@ -8,8 +8,16 @@
 {% for expense in expenses %}
 <div>
     <h1>
-        {{expense.creator.first_name}}
+        {{expense.creator.name}}
     </h1>
 </div>
 {% endfor %}
+    <br>
+    <div>
+        <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_expense' %}'">Create Expense</button>
+    </div>
+    <br>
+    <div>
+        <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_group' %}'">Create Group</button>
+    </div>
 {% endblock content %}
