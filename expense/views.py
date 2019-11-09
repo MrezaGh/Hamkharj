@@ -9,9 +9,10 @@ def expense_create_view(request):
     form = ExpenseForm(request.POST or None, user=request.user)
     if form.is_valid():
         form.save()
-        return redirect('panel')
+        return redirect("panel")
     context = {"form": form}
     return render(request, "pages/create_expense.html", context)
+
 
 # class ExpenseCreate(CreateView):
 #     model = Expense

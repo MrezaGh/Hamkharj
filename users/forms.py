@@ -1,6 +1,7 @@
 from allauth.account.forms import SignupForm
 from django import forms
 
+from group.models import Group
 from .models import CustomUser
 
 
@@ -47,6 +48,17 @@ class CustomSignUpForm(SignupForm):
     )
 
     field_order = ["first_name", "last_name", "email", "password1", "password2"]
+
+    def save(self, request):
+        # Ensure you call the parent class's save.
+        # .save() returns a User object.
+        user = super(CustomSignUpForm, self).save(request)
+
+        # Add your own processing here.
+        group = Group.objects.create(creator=user)
+        group.save()
+        # You must return the original result.
+        return user
 
     class Meta:
         model = CustomUser
