@@ -1,15 +1,23 @@
 from django import forms
 
 from expense.models import Expense, Record
-from users.models import CustomUser
+from group.models import Group
 
 
 class ExpenseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.creator = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        users = CustomUser.objects.all()
+        group = Group.objects.filter(creator=self.creator).get()
+        users = list(group.users.all())
+        users.append(self.creator)
+        # users = CustomUser.objects.all()
+        STATES = list()
+        for user in users:
+            STATES.append((user, user.email))
+        print(STATES)
         self.users = list()
+        self.fields["creator"] = forms.ChoiceField(choices=STATES)
         self.fields["title"] = forms.CharField(max_length=200)
         self.fields["description"] = forms.CharField(max_length=400)
         self.fields["amount"] = forms.DecimalField(max_digits=9, decimal_places=0)
@@ -54,4 +62,4 @@ class ExpenseForm(forms.ModelForm):
 
     class Meta:
         model = Expense
-        fields = ["title", "creator", "amount", "description"]
+        fields = ["title", "amount", "description"]

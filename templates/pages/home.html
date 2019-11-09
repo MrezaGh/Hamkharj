@@ -4,20 +4,42 @@
 {% block title %}Home page{% endblock title %}
 
 {% block content %}
-<h1>Home page</h1>
-{% for expense in expenses %}
-<div>
-    <h1>
-        {{expense.creator.name}}
-    </h1>
-</div>
-{% endfor %}
-    <br>
-    <div>
-        <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_expense' %}'">Create Expense</button>
+    <h1>Hi, {{ user.first_name }} !</h1>
+    <div class="pa4">
+        <div class="overflow-auto">
+            <table class="f6 w-100 mw8 center" cellspacing="0">
+                <thead>
+                <tr class="stripe-dark">
+                    <th class="fw6 tl pa3 bg-white">Name</th>
+                    <th class="fw6 tl pa3 bg-white">Balance</th>
+                </tr>
+                </thead>
+                <tbody class="lh-copy">
+                {% for key, value in balance %}
+                    <tr class="stripe-dark">
+                        <td class="pa3">{{ key }}</td>
+                        <td class="pa3">{{ value }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <br>
-    <div>
-        <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_group' %}'">Create Group</button>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-2">
+                <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_expense' %}'">
+                    Create Expense
+                </button>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" type="button" onclick="location.href='{% url 'update_group' %}'">
+                    Add to Group
+                </button>
+            </div>
+        </div>
     </div>
+    <div>
+
 {% endblock content %}
