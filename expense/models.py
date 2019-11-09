@@ -7,9 +7,6 @@ class Expense(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL, models.CASCADE, related_name="creator"
     )
-    other = models.ForeignKey(
-        settings.AUTH_USER_MODEL, models.CASCADE, related_name="other"
-    )
     amount = models.DecimalField(max_digits=9, decimal_places=0)
     description = models.TextField(blank=True)
 

@@ -9,4 +9,4 @@ class GroupCreate(CreateView):
     fields = "__all__"
     fields_order = ["title"]
     template_name = "pages/create_expense.html"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("panel")

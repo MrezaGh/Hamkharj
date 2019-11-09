@@ -11,5 +11,5 @@ class PanelView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, **kwargs):
         user = request.user
-        expenses = Expense.objects.filter(Q(creator=user.pk) | Q(user=user.pk))
+        expenses = Expense.objects.filter(Q(creator=user.pk))
         return render(request, "pages/home.html", {"expenses": list(expenses)})
