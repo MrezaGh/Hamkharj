@@ -10,11 +10,11 @@ class ExpenseForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         group = Group.objects.filter(creator=self.creator).get()
         users = list(group.users.all())
-        users.append(self.creator)
 
         group_users = list()
         for user in users:
             group_users.append((user, user.email))
+        group_users.append((self.creator, self.creator.email))
         self.users_dict = dict()
         for user in group_users:
             self.users_dict[user[1]] = user[0]
