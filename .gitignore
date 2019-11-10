@@ -371,5 +371,6 @@ modules.xml
 .history
 
 /*/migrations/
+!/*/migrations/__init__.py
 
 # End of https://www.gitignore.io/api/python,django,pycharm,pycharm+all,pycharm+iml,visualstudiocode
