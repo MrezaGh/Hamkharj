@@ -11,13 +11,16 @@ class ExpenseForm(forms.ModelForm):
         group = Group.objects.filter(creator=self.creator).get()
         users = list(group.users.all())
         users.append(self.creator)
-        # users = CustomUser.objects.all()
-        STATES = list()
+
+        group_users = list()
         for user in users:
-            STATES.append((user, user.email))
-        print(STATES)
+            group_users.append((user, user.email))
+        self.users_dict = dict()
+        for user in group_users:
+            self.users_dict[user[1]] = user[0]
+
         self.users = list()
-        self.fields["creator"] = forms.ChoiceField(choices=STATES)
+        self.fields["creator"] = forms.ChoiceField(choices=group_users)
         self.fields["title"] = forms.CharField(max_length=200)
         self.fields["description"] = forms.CharField(max_length=400)
         self.fields["amount"] = forms.DecimalField(max_digits=9, decimal_places=0)
@@ -50,7 +53,7 @@ class ExpenseForm(forms.ModelForm):
         expense.title = self.cleaned_data["title"]
         expense.description = self.cleaned_data["description"]
         expense.amount = self.cleaned_data["amount"]
-        expense.creator = self.cleaned_data["creator"]
+        expense.creator = self.users_dict[self.cleaned_data["creator"]]
         expense.save()
         for user, percentage in zip(
             self.cleaned_data["users-expenses"]["users"],

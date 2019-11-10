@@ -29,8 +29,16 @@ class PanelView(LoginRequiredMixin, TemplateView):
         for record in user_records:
             expense = record.expense
             if expense.creator in balance.keys():
-                balance[expense.creator] -= expense.amount * record.percent_of_share / 100
+                balance[expense.creator] -= (
+                    expense.amount * record.percent_of_share / 100
+                )
             else:
-                balance[expense.creator] = -expense.amount * record.percent_of_share / 100
-        balance['Overall Balance'] = sum(list(balance.values()))
-        return render(request, "pages/home.html", {"balance": zip(list(balance.keys()), list(balance.values()))})
+                balance[expense.creator] = (
+                    -expense.amount * record.percent_of_share / 100
+                )
+        balance["Overall Balance"] = sum(list(balance.values()))
+        return render(
+            request,
+            "pages/home.html",
+            {"balance": zip(list(balance.keys()), list(balance.values()))},
+        )

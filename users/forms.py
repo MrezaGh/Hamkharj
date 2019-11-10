@@ -7,7 +7,7 @@ from .models import CustomUser
 
 class CustomSignUpForm(SignupForm):
     first_name = forms.CharField(
-        max_length=10,
+        max_length=20,
         min_length=4,
         required=True,
         widget=forms.TextInput(
