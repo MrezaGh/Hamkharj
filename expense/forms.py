@@ -6,18 +6,15 @@ from group.models import Group
 
 class ExpenseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.creator = kwargs.pop("user", None)
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        group = Group.objects.filter(creator=self.creator).get()
+        group = Group.objects.filter(creator=self.user).get()
         users = list(group.users.all())
-        users.append(self.creator)
+        users.append(self.user)
 
         group_users = list()
         for user in users:
             group_users.append((user, user.email))
-
-        # group_users.append((self.creator, self.creator.email))
-
         self.users_dict = dict()
         for user in group_users:
             self.users_dict[user[1]] = user[0]
@@ -62,9 +59,10 @@ class ExpenseForm(forms.ModelForm):
             self.cleaned_data["users-expenses"]["users"],
             self.cleaned_data["users-expenses"]["percentages"],
         ):
-            Record.objects.create(
-                expense=expense, user=user, percent_of_share=percentage,
-            )
+            if user != self.user:
+                Record.objects.create(
+                    expense=expense, user=user, percent_of_share=percentage,
+                )
 
     class Meta:
         model = Expense
