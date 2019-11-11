@@ -59,7 +59,7 @@ class ExpenseForm(forms.ModelForm):
             self.cleaned_data["users-expenses"]["users"],
             self.cleaned_data["users-expenses"]["percentages"],
         ):
-            if user != self.user:
+            if user != self.users_dict[self.cleaned_data["creator"]]:
                 Record.objects.create(
                     expense=expense, user=user, percent_of_share=percentage,
                 )
