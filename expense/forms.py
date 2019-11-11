@@ -15,7 +15,9 @@ class ExpenseForm(forms.ModelForm):
         group_users = list()
         for user in users:
             group_users.append((user, user.email))
+
         # group_users.append((self.creator, self.creator.email))
+
         self.users_dict = dict()
         for user in group_users:
             self.users_dict[user[1]] = user[0]
