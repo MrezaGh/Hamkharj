@@ -25,6 +25,8 @@ class CreateGroupForm(forms.ModelForm):
         group.creator = self.user
         group.description = self.cleaned_data["description"]
         group.save()
+
+        group.users.add(self.user)
         for user in self.cleaned_data["users"]:
             group.users.add(CustomUser.objects.filter(email=user).get())
 
