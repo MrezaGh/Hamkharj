@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from expense.models import Expense, Record
+from group.models import Group
 
 
 class PanelView(LoginRequiredMixin, TemplateView):
@@ -30,15 +31,24 @@ class PanelView(LoginRequiredMixin, TemplateView):
             expense = record.expense
             if expense.creator in balance.keys():
                 balance[expense.creator] -= (
-                    expense.amount * record.percent_of_share / 100
+                        expense.amount * record.percent_of_share / 100
                 )
             else:
                 balance[expense.creator] = (
-                    -expense.amount * record.percent_of_share / 100
+                        -expense.amount * record.percent_of_share / 100
                 )
         balance["Overall Balance"] = sum(list(balance.values()))
+
+        created_groups = Group.objects.filter(creator=user.pk).all()
+        added_groups = Group.objects.exclude(creator=user.pk).filter(users=user.pk).all()
+        groups = [(elem.pk, elem.title, elem.description, elem.creator) for elem in created_groups]
+        groups += [(elem.pk, elem.title, elem.description, elem.creator) for elem in added_groups]
+
         return render(
             request,
             "pages/home.html",
-            {"balance": zip(list(balance.keys()), list(balance.values()))},
+            {
+                "balance": zip(list(balance.keys()), list(balance.values())),
+                "groups": groups
+            },
         )

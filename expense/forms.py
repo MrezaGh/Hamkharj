@@ -7,10 +7,10 @@ from group.models import Group
 class ExpenseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
+        self.g_id = kwargs.pop("g_id", None)
         super().__init__(*args, **kwargs)
-        group = Group.objects.filter(creator=self.user).get()
+        group = Group.objects.get(pk=self.g_id)
         users = list(group.users.all())
-        users.append(self.user)
 
         group_users = list()
         for user in users:
@@ -20,9 +20,9 @@ class ExpenseForm(forms.ModelForm):
             self.users_dict[user[1]] = user[0]
 
         self.users = list()
-        self.fields["creator"] = forms.ChoiceField(choices=group_users)
+        self.fields["creator"] = forms.ChoiceField(label="payer", choices=group_users)
         self.fields["title"] = forms.CharField(max_length=200)
-        self.fields["description"] = forms.CharField(max_length=400)
+        self.fields["description"] = forms.CharField(max_length=400, required=False)
         self.fields["amount"] = forms.DecimalField(max_digits=9, decimal_places=0)
 
         for i, user in enumerate(users):
@@ -59,7 +59,7 @@ class ExpenseForm(forms.ModelForm):
             self.cleaned_data["users-expenses"]["users"],
             self.cleaned_data["users-expenses"]["percentages"],
         ):
-            if user != self.users_dict[self.cleaned_data["creator"]]:
+            if user.email != self.cleaned_data["creator"]:
                 Record.objects.create(
                     expense=expense, user=user, percent_of_share=percentage,
                 )
