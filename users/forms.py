@@ -55,8 +55,8 @@ class CustomSignUpForm(SignupForm):
         user = super(CustomSignUpForm, self).save(request)
 
         # Add your own processing here.
-        group = Group.objects.create(creator=user)
-        group.save()
+        # group = Group.objects.create(creator=user)
+        # group.save()
         # You must return the original result.
         return user
 

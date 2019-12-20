@@ -5,6 +5,7 @@
 
 {% block content %}
     <h1>Hi, {{ user.first_name }} !</h1>
+    <h4>Balance</h4>
     <div class="pa4">
         <div class="overflow-auto">
             <table class="f6 w-100 mw8 center" cellspacing="0">
@@ -26,11 +27,40 @@
         </div>
     </div>
     <br>
+    <h4>Groups</h4>
+    <div class="pa4">
+        <div class="overflow-auto">
+            <table class="f6 w-100 mw8 center" cellspacing="0">
+                <thead>
+                <tr class="stripe-dark">
+                    <th class="fw6 tl pa3 bg-white">Name</th>
+                    <th class="fw6 tl pa3 bg-white">desc.</th>
+                    <th class="fw6 tl pa3 bg-white">creator</th>
+                </tr>
+                </thead>
+                <tbody class="lh-copy">
+                {% for name, desc, creator in groups %}
+                    <tr class="stripe-dark">
+                        <td class="pa3">{{ name }}</td>
+                        <td class="pa3">{{ desc }}</td>
+                        <td class="pa3">{{ creator }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-2">
                 <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_expense' %}'">
                     Create Expense
+                </button>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_group' %}'">
+                    Create Group
                 </button>
             </div>
             <div class="col-2">
