@@ -4,8 +4,9 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView
 
-from .forms import AddToGroupForm, CreateGroupForm
 from .models import Group
+from users.models import CustomUser
+from .forms import AddToGroupForm, CreateGroupForm
 
 
 @login_required
@@ -18,31 +19,25 @@ def group_create_view(request):
     return render(request, "pages/create_group.html", context)
 
 
-# class GroupCreate(View):
-#     form_class = CreateGroupForm
-#
-#     def get(self, request, *args, **kwargs):
-#         form = self.form_class(request=request)
-#         return render(request, self.template_name, {"form": form})
-
-    # model = Group
-    # fields = "__all__"
-    # fields_order = ["title"]
-    # template_name = "pages/create_group.html"
-    # success_url = reverse_lazy("panel")
-
-
 class AddToGroup(View):
     form_class = AddToGroupForm
     template_name = "pages/add_to_group.html"
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class(request=request)
-        return render(request, self.template_name, {"form": form})
+        g_id = kwargs.pop('group_id')
+        form = self.form_class(request=request, g_id=g_id)
+        return render(request, self.template_name, {"form": form, "members": self.members(g_id), "users": self.users})
 
-    def post(self, request):
-        form = self.form_class(request.POST, request=request)
+    def post(self, request, **kwargs):
+        g_id = kwargs.pop('group_id')
+        form = self.form_class(request.POST, request=request, g_id=g_id)
         if form.is_valid():
             form.save()
             return redirect("panel")
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, {"form": form, "members": self.members(g_id), "users": self.users})
+
+    def members(self, g_id):
+        members = Group.objects.get(pk=g_id).users.all()
+        members_email = [self.request.user.email] + [user.email for user in members]
+        self.users = CustomUser.objects.exclude(email__in=members_email).all()
+        return members_email

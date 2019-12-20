@@ -1,7 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
 
-from group.models import Group
 from .models import CustomUser
 
 

@@ -37,14 +37,17 @@ class AddToGroupForm(forms.Form):
     email = forms.EmailField()
 
     def __init__(self, *args, **kwargs):
+        self.group = None
+        self.g_id = kwargs.pop("g_id")
         self.request = kwargs.pop("request")
+
         super().__init__(*args, **kwargs)
 
     def clean(self):
         super().clean()
         try:
             user = self.request.user
-            group = Group.objects.all().filter(creator=user).get()
+            group = Group.objects.get(pk=self.g_id)
             new_user = (
                 CustomUser.objects.all().filter(email=self.cleaned_data["email"]).get()
             )

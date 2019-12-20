@@ -41,8 +41,8 @@ class PanelView(LoginRequiredMixin, TemplateView):
 
         created_groups = Group.objects.filter(creator=user.pk).all()
         added_groups = Group.objects.filter(users=user.pk).all()
-        groups = [(elem.title, elem.description, elem.creator) for elem in created_groups]
-        groups += [(elem.title, elem.description, elem.creator) for elem in added_groups]
+        groups = [(elem.pk, elem.title, elem.description, elem.creator) for elem in created_groups]
+        groups += [(elem.pk, elem.title, elem.description, elem.creator) for elem in added_groups]
 
         return render(
             request,

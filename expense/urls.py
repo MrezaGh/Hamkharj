@@ -4,4 +4,5 @@ from .views import expense_create_view
 
 urlpatterns = [
     path("create-expense/", expense_create_view, name="create_expense"),
+    path("create-expense/<int:group_id>", expense_create_view, name="create_expense"),
 ]
