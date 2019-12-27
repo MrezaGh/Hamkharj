@@ -1,8 +1,7 @@
 from django.urls import path
-from .views import AddFriendView
+from .views import AddFriendView, InviteFriend
 
 urlpatterns = [
     path("add-friend/", AddFriendView.as_view(), name="add_friend"),
-    # path("update-group/", AddToGroup.as_view(), name="update_group"),
-    # path("update-group/<int:group_id>", AddToGroup.as_view(), name="update_group"),
+    path("invite/", InviteFriend.as_view(), name="invite_friend")
 ]

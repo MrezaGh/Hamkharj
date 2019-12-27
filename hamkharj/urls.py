@@ -19,6 +19,8 @@ urlpatterns = [
     path("group/", include("group.urls")),
     path("friend/", include("friend.urls")),
     path("panel/", include("panel.urls")),
+    path("invitations/", include("invitations.urls"))
+
 ]
 
 if settings.DEBUG:

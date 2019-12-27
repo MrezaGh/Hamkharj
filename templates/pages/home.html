@@ -79,9 +79,12 @@
 
     <div class="row">
         <h4 >Friends</h4>
-        <button class="btn btn-warning center" type="button" onclick="location.href='{% url 'add_friend' %}'">Add Friend</button>
-    </div>
+        <span class="center">
+            <button class="btn btn-warning" type="button" onclick="location.href='{% url 'add_friend' %}'">Add Friends</button>
+            <button class="btn btn-warning" type="button" onclick="location.href='{% url 'invite_friend' %}'">Invite Friends</button>
+        </span>
 
+    </div>
 
 
     <div class="pa4">

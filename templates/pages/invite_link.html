@@ -1,0 +1,16 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Friend{% endblock %}
+
+{% block content %}
+    <h2>Invited {{ friend_mail }}</h2>
+    <br>
+    An email has been sent to {{ friend_mail }}
+     <br>
+    you can send your friend this invite link too:
+    <br>
+    <h6>{{ invite_link }}</h6>
+    <button class="btn btn-default" type="button" onclick="location.href='{% url 'panel' %}'">back</button>
+
+{% endblock content %}

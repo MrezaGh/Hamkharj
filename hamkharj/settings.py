@@ -24,7 +24,7 @@ SECRET_KEY = "43)%4yx)aa@a=+_c(fn&kf3g29xax+=+a&key9i=!98zyim=8j"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Application definition
 
@@ -41,12 +41,14 @@ INSTALLED_APPS = [
     "allauth.account",
     "crispy_forms",
     "debug_toolbar",
+    "invitations",
     # Local
     "users",
     "expense",
     "group",
     "panel",
     "friend",
+
 ]
 
 MIDDLEWARE = [
@@ -153,3 +155,5 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'  # from friend invitation
+INVITATIONS_SIGNUP_REDIRECT = "/accounts/signup/"

@@ -1,0 +1,14 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Add Friend{% endblock %}
+
+{% block content %}
+    <h2>Invite Friend</h2>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success" type="submit">Add Friend</button>
+    </form>
+{% endblock content %}
