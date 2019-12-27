@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 
 from expense.models import Expense, Record
 from group.models import Group
+from friend.models import Friendship
 
 
 class PanelView(LoginRequiredMixin, TemplateView):
@@ -44,11 +45,15 @@ class PanelView(LoginRequiredMixin, TemplateView):
         groups = [(elem.pk, elem.title, elem.description, elem.creator) for elem in created_groups]
         groups += [(elem.pk, elem.title, elem.description, elem.creator) for elem in added_groups]
 
+        friendships = Friendship.objects.all().filter(user_id=user)
+        friends = [friendship.friend_id for friendship in friendships]
+
         return render(
             request,
             "pages/home.html",
             {
                 "balance": zip(list(balance.keys()), list(balance.values())),
-                "groups": groups
+                "groups": groups,
+                "friends": friends
             },
         )

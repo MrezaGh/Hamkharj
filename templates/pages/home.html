@@ -76,6 +76,47 @@
             </div>
         </div>
     </div>
-    <div>
+
+    <div class="row">
+        <h4 >Friends</h4>
+        <button class="btn btn-warning center" type="button" onclick="location.href='{% url 'add_friend' %}'">Add Friend</button>
+    </div>
+
+
+
+    <div class="pa4">
+        <div class="overflow-auto">
+            <table class="f6 w-100 mw8 center" cellspacing="0">
+                <thead>
+                <tr class="stripe-dark">
+                    <th class="fw6 tl pa3 bg-white">Username</th>
+                    <th class="fw6 tl pa3 bg-white">Full Name</th>
+                    <th class="fw6 tl pa3 bg-white">Email</th>
+                    <th class="fw6 tl pa3 bg-white"></th>
+                    <th class="fw6 tl pa3 bg-white"></th>
+                </tr>
+                </thead>
+                <tbody class="lh-copy">
+                {% for friend in friends %}
+                    <tr class="stripe-dark">
+                        <td class="pa3">{{ friend.username }}</td>
+                        <td class="pa3">{{ friend.first_name }} {{ friend.last_name }}</td>
+                        <td class="pa3">{{ friend.email }}</td>
+{#                        <td class="pa3">#}
+{#                            <div class="col-2">#}
+{#                                <button class="btn btn-danger" type="button"#}
+{#                                        onclick="location.href='{% url 'remove_friend' %}'"> Remove friend#}
+{#                                </button>#}
+{#                            </div>#}
+{#                        </td>#}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+
+
 
 {% endblock content %}

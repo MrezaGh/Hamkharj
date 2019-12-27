@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "expense",
     "group",
     "panel",
+    "friend",
 ]
 
 MIDDLEWARE = [

@@ -17,6 +17,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("", include("expense.urls")),
     path("group/", include("group.urls")),
+    path("friend/", include("friend.urls")),
     path("panel/", include("panel.urls")),
 ]
 
