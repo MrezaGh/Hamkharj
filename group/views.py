@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView
-
+from expense.models import Expense
 from .models import Group
 from users.models import CustomUser
 from .forms import AddToGroupForm, CreateGroupForm
@@ -17,6 +17,9 @@ def group_create_view(request):
         return redirect("panel")
     context = {"form": form}
     return render(request, "pages/create_group.html", context)
+
+
+
 
 
 class AddToGroup(View):

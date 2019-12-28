@@ -9,6 +9,8 @@ class Expense(models.Model):
     )
     amount = models.DecimalField(max_digits=9, decimal_places=0)
     description = models.TextField(blank=True)
+    # expense_image = models.FileField()
+    expense_image = models.ImageField(upload_to=settings.MEDIA_URL, blank=True)
 
     date_added = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)

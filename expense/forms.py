@@ -2,8 +2,8 @@ from django import forms
 
 from expense.models import Expense, Record
 from group.models import Group
-
-
+from django.conf import settings
+from PIL import Image, ImageOps, ImageFile
 class ExpenseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
@@ -24,6 +24,8 @@ class ExpenseForm(forms.ModelForm):
         self.fields["title"] = forms.CharField(max_length=200)
         self.fields["description"] = forms.CharField(max_length=400, required=False)
         self.fields["amount"] = forms.DecimalField(max_digits=9, decimal_places=0)
+        # self.expense_image = forms.ImageField()
+
 
         for i, user in enumerate(users):
             field_name = "user_%s_share" % (user.email,)
@@ -48,12 +50,19 @@ class ExpenseForm(forms.ModelForm):
             "percentages": percentages,
         }
 
+
     def save(self, **kwargs):
         expense = self.instance
         expense.title = self.cleaned_data["title"]
         expense.description = self.cleaned_data["description"]
         expense.amount = self.cleaned_data["amount"]
         expense.creator = self.users_dict[self.cleaned_data["creator"]]
+        # print(type(self.cleaned_data["expense_image"]), self.cleaned_data["expense_image"])
+        # print(self.expense_image)
+        # mirrored_image = ImageOps.mirror(self.expense_image)
+        # image_file = ImageFile(mirrored_image)
+        # expense.expense_image = image_file
+        # expense.expense_image = self.expense_image
         expense.save()
         for user, percentage in zip(
             self.cleaned_data["users-expenses"]["users"],

@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Home page{% endblock title %}
+
+{% block content %}
+    <h1> {{ creator.first_name }}'s expenses summary </h1>
+
+    <div class="pa4">
+        <div class="overflow-auto">
+            <table class="f6 w-100 mw8 center" cellspacing="0">
+                <thead>
+                <tr class="stripe-dark">
+                    <th class="fw6 tl pa3 bg-white">title</th>
+                    <th class="fw6 tl pa3 bg-white">paid amount</th>
+                    <th class="fw6 tl pa3 bg-white">in debt</th>
+                    <th class="fw6 tl pa3 bg-white">debt amount</th>
+
+                </tr>
+                </thead>
+                <tbody class="lh-copy">
+                {% for title,debt_record in expenses.items %}
+                        {% for in_debt in debt_record %}
+                            <tr class="stripe-dark">
+                            <td class="pa3">{{ title }}</td>
+                            {% for item in in_debt %}
+                                <td class="pa3">{{ item }}</td>
+                            {% endfor %}
+                            </tr>
+                        {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+
+     <button class="btn btn-default" type="button" onclick="location.href='{% url 'panel' %}'">back</button>
+
+
+
+{% endblock content %}

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from django.shortcuts import redirect
-
+from django.conf.urls.static import static
 
 # fixme should be deleted
 def landing(request):
@@ -19,11 +19,14 @@ urlpatterns = [
     path("group/", include("group.urls")),
     path("friend/", include("friend.urls")),
     path("panel/", include("panel.urls")),
-    path("invitations/", include("invitations.urls"))
+    path("invitations/", include("invitations.urls")),
 
 ]
 
 if settings.DEBUG:
     import debug_toolbar
-
     urlpatterns = [path("__debug__/", include(debug_toolbar.urls)),] + urlpatterns
+    urlpatterns += static(settings.STATIC_URL, documentroot=settings.STATICFILES_DIRS)
+    urlpatterns += static(settings.MEDIA_URL, documentroot=settings.MEDIA_ROOT)
+
+

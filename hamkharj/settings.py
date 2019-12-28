@@ -157,3 +157,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'  # from friend invitation
 INVITATIONS_SIGNUP_REDIRECT = "/accounts/signup/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'media/'
