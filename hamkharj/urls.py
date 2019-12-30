@@ -15,7 +15,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("django.contrib.auth.urls")),
     path("accounts/", include("allauth.urls")),
-    path("", include("expense.urls")),
+    path(r"expenses/", include("expense.urls")),
     path("group/", include("group.urls")),
     path("friend/", include("friend.urls")),
     path("panel/", include("panel.urls")),
@@ -26,7 +26,7 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [path("__debug__/", include(debug_toolbar.urls)),] + urlpatterns
-    urlpatterns += static(settings.STATIC_URL, documentroot=settings.STATICFILES_DIRS)
-    urlpatterns += static(settings.MEDIA_URL, documentroot=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
