@@ -11,3 +11,20 @@
   <button class="btn btn-success" type="submit">Create Expense</button>
 </form>
 {% endblock content %}
+{% block extra_js %}
+    <script>
+        $(document).ready(function () {
+            $('select[name="category"]').closest('div').append('' +
+                "<button " +
+                "   type=\"button\" " +
+                "   class=\"btn btn-primary pull-right\"" +
+                "   id=\"id_add_expense_category\"" +
+                "><span><i class=\"glyphicon glyphicon-plus\"></i> Add Category</span>" +
+                "</button>"
+            );
+            $('#id_add_expense_category').click(function () {
+                window.location = window.location.replace('expense', 'expense-category');
+            })
+        })
+    </script>
+{% endblock %}

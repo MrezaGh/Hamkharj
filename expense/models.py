@@ -9,11 +9,25 @@ class Expense(models.Model):
     )
     amount = models.DecimalField(max_digits=9, decimal_places=0)
     description = models.TextField(blank=True)
-    # expense_image = models.FileField()
-    expense_image = models.ImageField(upload_to=settings.MEDIA_URL, blank=True)
 
     date_added = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+
+    expense_attachment = models.ImageField(
+        upload_to='expenses/attachments',
+        blank=True,
+        default='',
+        verbose_name='expense attachment'
+    )
+
+    category = models.ForeignKey(
+        to='expense.ExpenseCategory',
+        related_name='expenses',
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+        verbose_name='category'
+    )
 
 
 class Record(models.Model):
@@ -31,3 +45,16 @@ class Record(models.Model):
                 name="percent_of_share_lte_100",
             ),
         ]
+
+
+class ExpenseCategory(models.Model):
+    title = models.CharField(max_length=50, verbose_name='title')
+    group = models.ForeignKey(
+        to='group.Group',
+        related_name='expense_categories',
+        on_delete=models.DO_NOTHING,
+        verbose_name='group'
+    )
+
+    def __str__(self):
+        return self.title
