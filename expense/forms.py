@@ -2,7 +2,7 @@ import re
 
 from django import forms
 
-from expense.models import Expense, Record
+from expense.models import Expense, Record, ExpenseCategory
 from group.models import Group
 
 
@@ -39,3 +39,9 @@ class ExpenseForm(forms.ModelForm):
     class Meta:
         model = Expense
         fields = ["title", "amount", "category", "description", "expense_attachment", "creator"]
+
+
+class ExpenseCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ExpenseCategory
+        fields = ('title', )
