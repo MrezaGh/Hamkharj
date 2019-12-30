@@ -6,32 +6,40 @@
 {% block content %}
     <h1> {{ creator.first_name }}'s expenses summary </h1>
 
-    <div class="pa4">
-        <div class="overflow-auto">
-            <table class="f6 w-100 mw8 center" cellspacing="0">
-                <thead>
-                <tr class="stripe-dark">
-                    <th class="fw6 tl pa3 bg-white">title</th>
-                    <th class="fw6 tl pa3 bg-white">paid amount</th>
-                    <th class="fw6 tl pa3 bg-white">in debt</th>
-                    <th class="fw6 tl pa3 bg-white">debt amount</th>
+    <div class="table table-responsive">
+        <table class="table table-striped table-bordered" id="expenses-summary-table">
+            <thead>
+            <tr>
+                <th>title</th>
+                <th>paid amount</th>
+                <th>in debt</th>
+                <th>debt amount</th>
+                <th>debt attachment</th>
 
-                </tr>
-                </thead>
-                <tbody class="lh-copy">
-                {% for title,debt_record in expenses.items %}
-                        {% for in_debt in debt_record %}
-                            <tr class="stripe-dark">
-                            <td class="pa3">{{ title }}</td>
-                            {% for item in in_debt %}
-                                <td class="pa3">{{ item }}</td>
-                            {% endfor %}
-                            </tr>
+            </tr>
+            </thead>
+            <tbody>
+            {% for title,debt_record in expenses.items %}
+                    {% for in_debt in debt_record %}
+                        <tr>
+                        <td>{{ title }}</td>
+                        {% for item in in_debt %}
+                            {% ifnotequal forloop.counter 2 %}<td>{{ item }}</td>{% endifnotequal %}
                         {% endfor %}
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                        <td class="image-cell">
+                            {% if in_debt.1 %}<img
+                                id="image{{ forloop.parentloop.counter }}"
+                                src=""
+                                data-image="{{ in_debt.1 }}"
+                                height="100"
+                                width="150"
+                            />{% endif %}
+                        </td>
+                        </tr>
+                    {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
     <br>
 
@@ -40,3 +48,17 @@
 
 
 {% endblock content %}
+{% block extra_js %}
+    <script>
+        $(document).ready(function() {
+            let all_rows_count = {{ expenses|length }};
+            for(let i = 0; i < all_rows_count; i ++) {
+                let image_el = $(`.image-cell #image${i + 1}`);
+                let image = image_el.attr('data-image');
+                if(image){
+                    image_el.attr('src', window.location.origin + '/' + image)
+                }
+            }
+        });
+    </script>
+{% endblock %}
