@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import ExpenseForm
+from group.models import Group
+from .forms import ExpenseForm, ExpenseCategoryForm
 from .models import Expense, Record
 
 
@@ -36,3 +37,19 @@ def summary(request):
 
     return render(request, 'pages/summary_of_expenses.html',
                   context={'expenses': in_debt_users, 'creator': request.user})
+
+
+class CategoryCreateView(CreateView):
+    template_name = 'pages/create_category.html'
+    form_class = ExpenseCategoryForm
+
+    def get_success_url(self):
+        return f'/expenses/create-expense/{self.kwargs["group_id"]}'
+
+    def form_valid(self, form):
+        group = Group.objects.filter(users=self.request.user.id, id=self.kwargs['group_id']).first()
+        if not group:
+            form.add_error(None, 'You do not have permission to add expense categories to this group.')
+            return self.form_invalid(form)
+        form.instance.group = group
+        return super(CategoryCreateView, self).form_valid(form)
