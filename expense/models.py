@@ -20,6 +20,15 @@ class Expense(models.Model):
         verbose_name='expense attachment'
     )
 
+    category = models.ForeignKey(
+        to='expense.ExpenseCategory',
+        related_name='expenses',
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+        verbose_name='category'
+    )
+
 
 class Record(models.Model):
     expense = models.ForeignKey("Expense", models.CASCADE, related_name="expense")
@@ -36,3 +45,16 @@ class Record(models.Model):
                 name="percent_of_share_lte_100",
             ),
         ]
+
+
+class ExpenseCategory(models.Model):
+    title = models.CharField(max_length=50, verbose_name='title')
+    group = models.ForeignKey(
+        to='group.Group',
+        related_name='expense_categories',
+        on_delete=models.DO_NOTHING,
+        verbose_name='group'
+    )
+
+    def __str__(self):
+        return self.title
