@@ -4,6 +4,27 @@ from django import forms
 from .models import CustomUser
 
 
+class AccountSettingsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        self.user = self.request.user
+        super().__init__(*args, **kwargs)
+
+        self.fields["first_name"] = forms.CharField(max_length=200, required=False, initial=self.user.first_name)
+        self.fields["last_name"] = forms.CharField(max_length=200, required=False, initial=self.user.last_name)
+        self.fields["email"] = forms.CharField(max_length=200, required=False, initial=self.user.email)
+
+    def save(self, **kwargs):
+        user = CustomUser.objects.get(pk=self.user.id)
+        for changed in self.changed_data:
+            setattr(user, changed, self.cleaned_data[changed])
+        user.save()
+
+    class Meta:
+        model = CustomUser
+        fields = ["first_name", "last_name", "email"]
+
+
 class CustomSignUpForm(SignupForm):
     first_name = forms.CharField(
         max_length=20,
