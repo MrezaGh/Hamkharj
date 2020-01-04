@@ -370,7 +370,7 @@ modules.xml
 # Ignore all local history of files
 .history
 
-/*/migrations/
+/*/migrations/*
 !/*/migrations/__init__.py
 
 # End of https://www.gitignore.io/api/python,django,pycharm,pycharm+all,pycharm+iml,visualstudiocode

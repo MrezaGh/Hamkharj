@@ -19,9 +19,6 @@ def group_create_view(request):
     return render(request, "pages/create_group.html", context)
 
 
-
-
-
 class AddToGroup(View):
     form_class = AddToGroupForm
     template_name = "pages/add_to_group.html"
