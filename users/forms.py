@@ -2,6 +2,7 @@ from allauth.account.forms import SignupForm
 from django import forms
 
 from .models import CustomUser
+from allauth.account.models import EmailAddress
 
 
 class AccountSettingsForm(forms.ModelForm):
@@ -17,6 +18,10 @@ class AccountSettingsForm(forms.ModelForm):
     def save(self, **kwargs):
         user = CustomUser.objects.get(pk=self.user.id)
         for changed in self.changed_data:
+            if changed == 'email':
+                email_rel = EmailAddress.objects.get(user_id=user.id)
+                email_rel.email = self.cleaned_data[changed]
+                email_rel.save()
             setattr(user, changed, self.cleaned_data[changed])
         user.save()
 
