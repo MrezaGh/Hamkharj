@@ -4,42 +4,57 @@
 {% block title %}Home page{% endblock title %}
 
 {% block content %}
-    <h1> {{ creator.first_name }}'s expenses summary </h1>
+    <h1>
+        {% if creator.first_name and creator.last_name %}{{ creator.first_name }} {{ creator.last_name }}{% else %}{{ creator.username }}{% endif %}'s expenses summary
+    </h1>
 
-    <div class="table table-responsive">
-        <table class="table table-striped table-bordered" id="expenses-summary-table">
-            <thead>
-            <tr>
-                <th>title</th>
-                <th>paid amount</th>
-                <th>in debt</th>
-                <th>debt amount</th>
-                <th>debt attachment</th>
-
-            </tr>
-            </thead>
-            <tbody>
-            {% for title,debt_record in expenses.items %}
-                    {% for in_debt in debt_record %}
-                        <tr>
-                        <td>{{ title }}</td>
-                        {% for item in in_debt %}
-                            {% ifnotequal forloop.counter 2 %}<td>{{ item }}</td>{% endifnotequal %}
-                        {% endfor %}
-                        <td class="image-cell">
-                            {% if in_debt.1 %}<img
-                                id="image{{ forloop.parentloop.counter }}"
-                                src=""
-                                data-image="{{ in_debt.1 }}"
-                                height="100"
-                                width="150"
-                            />{% endif %}
-                        </td>
-                        </tr>
-                    {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            {% for expense, expense_records in expense_list %}
+                <div class="card" id="id-card-{{ expense.id }}">
+                    <div class="col-md-12 card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="row">{{ expense.title }}</div>
+                                            <div class="row">{{ expense.amount }}$</div>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            {% if expense.expense_attachment and expense.expense_attachment.url %}
+                                                <button type="button" class="btn btn-sm btn-default showAttachment"><span class="fas fa-image"></span></button>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-sm btn-primary updateExpense" data-id="{{ expense.id }}"><span class="fas fa-edit"></span></button>
+                                        </div>
+                                    </div>
+                                <br/>
+                                    {% if expense.expense_attachment and expense.expense_attachment.url %}
+                                        <div class="row">
+                                            <div class="col-md-10 col-md-offset-1">
+                                                <img hidden src="/{{ expense.expense_attachment.url }}"/>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <div class="table table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            {% for record in expense_records %}
+                                                <tr><td style="width: 50%;">{{ record.name }}</td><td style="width: 50%;">{{ record.debt_share }}</td></tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
             {% endfor %}
-            </tbody>
-        </table>
+        </div>
     </div>
     <br>
 
@@ -51,14 +66,25 @@
 {% block extra_js %}
     <script>
         $(document).ready(function() {
-            let all_rows_count = {{ expenses|length }};
-            for(let i = 0; i < all_rows_count; i ++) {
-                let image_el = $(`.image-cell #image${i + 1}`);
-                let image = image_el.attr('data-image');
-                if(image){
-                    image_el.attr('src', window.location.origin + '/' + image)
+            $('.showAttachment').click(function (e) {
+                var target = $(e.target);
+                var img = target.closest('.card').find('img');
+                var btn = target.hasClass('showAttachment') ? target : target.closest('button');
+                if(img.attr('hidden')){
+                    img.removeAttr('hidden');
+                    btn.removeClass('btn-default').addClass('btn-primary');
                 }
-            }
+                else{
+                    img.attr('hidden', true);
+                    btn.removeClass('btn-primary').addClass('btn-default');
+                }
+            });
+            $('.updateExpense').click(function (e) {
+                var target = $(e.target);
+                var btn = target.hasClass('updateExpense') ? target : target.closest('button');
+                var expenseId = btn.attr('data-id');
+                window.location = '/expenses/update-expense/' + expenseId;
+            });
         });
     </script>
 {% endblock %}

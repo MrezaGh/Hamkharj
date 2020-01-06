@@ -1,15 +1,16 @@
-from django.shortcuts import render
+from django.db.models import F, Value
+from django.db.models.functions import Concat
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView, UpdateView
 
 from group.models import Group
-from .forms import ExpenseForm, ExpenseCategoryForm
-from .models import Expense, Record
+from .forms import ExpenseCreateForm, ExpenseUpdateForm, ExpenseCategoryForm
+from .models import Expense
 
 
 class ExpenseCreateView(CreateView):
     template_name = 'pages/create_expense.html'
-    form_class = ExpenseForm
+    form_class = ExpenseCreateForm
     success_url = reverse_lazy('panel')
 
     def get_form_kwargs(self):
@@ -21,22 +22,43 @@ class ExpenseCreateView(CreateView):
         return {**super(ExpenseCreateView, self).get_context_data(**kwargs), **{'group_id': self.kwargs['group_id']}}
 
 
-def summary(request):
-    paid_expenses = Expense.objects.filter(creator=request.user)
-    in_debt_users = {}
-    for paid_expense in paid_expenses:
-        # paid_expenses = Expense()
-        records_of_paid_expenses = Record.objects.filter(expense=paid_expense)
-        if len(records_of_paid_expenses):
-            in_debt_users[paid_expense.title] = [(
-                paid_expense.amount,
-                paid_expense.expense_attachment.url if paid_expense.expense_attachment else '',
-                record.user,
-                record.percent_of_share * paid_expense.amount / 100
-            ) for record in records_of_paid_expenses]
+class ExpenseUpdateView(UpdateView):
+    template_name = 'pages/update_expense.html'
+    queryset = Expense.objects.all()
+    pk_url_kwarg = 'expense_id'
+    form_class = ExpenseUpdateForm
+    success_url = reverse_lazy('summary-of-expenses')
 
-    return render(request, 'pages/summary_of_expenses.html',
-                  context={'expenses': in_debt_users, 'creator': request.user})
+    def get_queryset(self):
+        return self.queryset.filter(creator=self.request.user)
+
+
+class ExpenseSummaryView(ListView):
+    template_name = 'pages/summary_of_expenses.html'
+    queryset = Expense.objects.all()
+
+    def get_queryset(self):
+        return self.queryset.filter(creator=self.request.user)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ExpenseSummaryView, self).get_context_data(*args, **kwargs)
+        context.update(
+            creator=self.request.user,
+            expense_list=(
+                (
+                    expense,
+                    expense.records.annotate(
+                        name=Concat(F('user__first_name'), Value(' '), F('user__last_name')),
+                        debt_share=F('percent_of_share') * F('expense__amount') / 100,
+                    ).values(
+                        'name',
+                        'debt_share',
+                    )
+                )
+                for expense in context['expense_list']
+            )
+        )
+        return context
 
 
 class CategoryCreateView(CreateView):

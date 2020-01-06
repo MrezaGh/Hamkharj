@@ -31,7 +31,7 @@ class Expense(models.Model):
 
 
 class Record(models.Model):
-    expense = models.ForeignKey("Expense", models.CASCADE, related_name="expense")
+    expense = models.ForeignKey("Expense", models.CASCADE, related_name="records")
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, models.CASCADE, related_name="user"
     )
