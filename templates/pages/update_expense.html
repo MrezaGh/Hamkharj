@@ -1,14 +1,14 @@
 {% extends '_base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Create Expense{% endblock %}
+{% block title %}Update Expense{% endblock %}
 
 {% block content %}
-<h2>Create Expense</h2>
+<h2>Update Expense</h2>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form|crispy }}
-  <button class="btn btn-success" type="submit">Create Expense</button>
+  <button class="btn btn-success" type="submit">Update Expense</button>
 </form>
 {% endblock content %}
 {% block extra_js %}
@@ -23,7 +23,7 @@
                 "</button>"
             );
             $('#id_add_expense_category').click(function () {
-                window.location = window.location.replace('expense', 'expense-category');
+                window.location = '/expenses/create-expense-category';
             })
         })
     </script>
