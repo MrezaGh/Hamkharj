@@ -23,7 +23,10 @@
                     {% endfor %}
                 {% else %}
                     <tr class="stripe-dark">
-                            <td class="pa3">All your friends are in this group. Add some friends.</td>
+                            <td class="pa3">All your friends are in this group.</td>
+                            <td class="pa3">
+                                <button class="btn btn-link" type="button" onclick="location.href='{% url 'add_friend' %}'">Add a friend</button>
+                            </td>
                         </tr>
                 {% endif %}
                 </tbody>
