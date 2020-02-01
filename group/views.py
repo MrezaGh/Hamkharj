@@ -6,7 +6,8 @@ from django.views.generic.edit import CreateView
 from expense.models import Expense
 from .models import Group
 from users.models import CustomUser
-from .forms import AddToGroupForm, CreateGroupForm
+from friend.models import Friendship
+from .forms import AddToGroupForm, CreateGroupForm, GroupSettingsForm
 
 
 @login_required
@@ -24,9 +25,39 @@ class AddToGroup(View):
     template_name = "pages/add_to_group.html"
 
     def get(self, request, *args, **kwargs):
+        self.user = request.user
         g_id = kwargs.pop('group_id')
         form = self.form_class(request=request, g_id=g_id)
-        return render(request, self.template_name, {"form": form, "members": self.members(g_id), "users": self.users})
+        return render(request, self.template_name,
+                      {"form": form, "group_id": g_id, "members": self.members(g_id), "users": self.friends})
+
+    def post(self, request, **kwargs):
+        self.user = request.user
+        g_id = kwargs.pop('group_id')
+        form = self.form_class(request.POST, request=request, g_id=g_id)
+        if form.is_valid():
+            form.save()
+            return redirect("panel")
+        return render(request, self.template_name,
+                      {"form": form, "group_id": g_id, "members": self.members(g_id), "users": self.friends})
+
+    def members(self, g_id):
+        members = Group.objects.get(pk=g_id).users.all()
+        members_email = [user.email for user in members]
+        self.users = CustomUser.objects.exclude(email__in=members_email).all()
+        self.friends = [friendship.friend_id for friendship in Friendship.objects.filter(user_id=self.user) if
+                        friendship.friend_id.email not in members_email]
+        return members_email
+
+
+class GroupSettings(View):
+    template_name = "pages/group_update.html"
+    form_class = GroupSettingsForm
+
+    def get(self, request, *args, **kwargs):
+        g_id = kwargs.pop('group_id')
+        form = self.form_class(request=request, g_id=g_id)
+        return render(request, self.template_name, {"form": form, "members": self.members(g_id), "id": g_id})
 
     def post(self, request, **kwargs):
         g_id = kwargs.pop('group_id')
@@ -38,6 +69,31 @@ class AddToGroup(View):
 
     def members(self, g_id):
         members = Group.objects.get(pk=g_id).users.all()
-        members_email = [self.request.user.email] + [user.email for user in members]
+        members_email = [user.email for user in members]
         self.users = CustomUser.objects.exclude(email__in=members_email).all()
         return members_email
+
+
+class DeleteUser(View):
+    def get(self, request, *args, **kwargs):
+        g_id = kwargs.pop('group_id')
+        group = Group.objects.get(pk=g_id)
+        user_email = kwargs.pop('user_email')
+
+        group.users.remove(CustomUser.objects.get(email=user_email))
+        group.save()
+
+        return redirect("group_settings", group_id=g_id)
+
+
+class AddUser(View):
+    def get(self, request, *args, **kwargs):
+        g_id = kwargs.pop('group_id')
+        group = Group.objects.get(pk=g_id)
+        user_email = kwargs.pop('user_email')
+
+        group.users.add(CustomUser.objects.get(email=user_email))
+
+        group.save()
+
+        return redirect("group_settings", group_id=g_id)

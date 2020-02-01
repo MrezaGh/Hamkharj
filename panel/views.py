@@ -42,8 +42,8 @@ class PanelView(LoginRequiredMixin, TemplateView):
 
         created_groups = Group.objects.filter(creator=user.pk).all()
         added_groups = Group.objects.exclude(creator=user.pk).filter(users=user.pk).all()
-        groups = [(elem.pk, elem.title, elem.description, elem.creator) for elem in created_groups]
-        groups += [(elem.pk, elem.title, elem.description, elem.creator) for elem in added_groups]
+        groups = [(elem.pk, elem.title, elem.description, elem.creator, True) for elem in created_groups]
+        groups += [(elem.pk, elem.title, elem.description, elem.creator, False) for elem in added_groups]
 
         friendships = Friendship.objects.all().filter(user_id=user)
         friends = [friendship.friend_id for friendship in friendships]

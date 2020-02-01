@@ -61,3 +61,23 @@ class AddToGroupForm(forms.Form):
 
     def save(self, **kwargs):
         self.group.save()
+
+
+class GroupSettingsForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.g_id = kwargs.pop("g_id")
+        self.group = Group.objects.get(pk=self.g_id)
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+
+        self.fields['title'] = forms.CharField(initial=self.group.title, max_length=30, required=False)
+        self.fields['description'] = forms.CharField(initial=self.group.description, max_length=200, required=False)
+
+    def save(self, **kwargs):
+        for changed in self.changed_data:
+            setattr(self.group, changed, self.cleaned_data[changed])
+        self.group.save()
+
+    class Meta:
+        model = Group
+        fields = ['title', 'description']

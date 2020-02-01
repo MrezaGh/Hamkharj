@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Group Settings{% endblock %}
+
+{% block content %}
+    <h2>Group Settings</h2>
+    <br>
+    <div class="pa4">
+        <div class="overflow-auto">
+            <table class="f6 w-100 mw8 center" cellspacing="0">
+                <thead>
+                <tr class="stripe-dark">
+                    <th class="fw6 tl pa3 bg-white"><h5>Current members</h5></th>
+                </tr>
+                </thead>
+                <tbody class="lh-copy">
+                {% for member in members %}
+                    <tr class="stripe-dark">
+                        <td class="pa3">{{ member }}</td>
+                        <td class="pa0">
+                            <button class="btn btn-danger" type="button"
+                                        onclick="location.href='{% url 'delete_user' group_id=id user_email=member %}'"> delete
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <td class="pa0">
+                    <button class="btn btn-success" type="button"
+                            onclick="location.href='{% url 'update_group' group_id=id %}'"> Add to Group
+                    </button>
+                </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-info" type="submit">Save Changes</button>
+    </form>
+
+{% endblock content %}

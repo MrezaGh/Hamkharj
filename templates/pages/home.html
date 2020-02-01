@@ -41,41 +41,41 @@
                 </tr>
                 </thead>
                 <tbody class="lh-copy">
-                {% for id, name, desc, creator in groups %}
+                {% for id, name, desc, creator, created in groups %}
                     <tr class="stripe-dark">
                         <td class="pa3">{{ name }}</td>
                         <td class="pa3">{{ desc }}</td>
                         <td class="pa3">{{ creator }}</td>
-                        <td class="pa3">
-                            <div class="col-2">
-                                <button class="btn btn-primary" type="button"
-                                        onclick="location.href='{% url 'create_expense' group_id=id %}'"> Create Expense
-                                </button>
-                            </div>
+                        <td class="pa0">
+                            <button class="btn btn-primary" type="button"
+                                    onclick="location.href='{% url 'create_expense' group_id=id %}'"> Create Expense
+                            </button>
                         </td>
-                        <td class="pa3">
-                            <div class="col-2">
-                                <button class="btn btn-primary" type="button"
-                                        onclick="location.href='{% url 'update_group' group_id=id %}'"> Add to Group
+                        {% if created %}
+                            <td class="pa0">
+                                <button class="btn btn-info" type="button"
+                                        onclick="location.href='{% url 'group_settings' group_id=id %}'"> Group Settings
                                 </button>
-                            </div>
-                        </td>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
+                <tr class="stripe-dark">
+                    <td class="pa3">
+                        <button class="btn btn-success" type="button" onclick="location.href='{% url 'create_group' %}'">
+                            Create Group
+                        </button>
+                    </td>
+                    <td></td><td></td><td></td><td></td>
+                </tr>
                 </tbody>
             </table>
         </div>
     </div>
     <br>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-2">
-                <button class="btn btn-primary" type="button" onclick="location.href='{% url 'create_group' %}'">
-                    Create Group
-                </button>
-            </div>
-        </div>
-    </div>
+    <br>
 
     <div class="row">
         <h4 >Friends</h4>
