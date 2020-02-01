@@ -6,42 +6,32 @@
 {% block content %}
     <h2>Add To Group</h2>
     <br>
-{#    <div class="pa4">#}
-{#        <div class="overflow-auto">#}
-{#            <table class="f6 w-100 mw8 center" cellspacing="0">#}
-{#                <thead>#}
-{#                <tr class="stripe-dark">#}
-{#                    <th class="fw6 tl pa3 bg-white"><h5>Current members</h5></th>#}
-{#                </tr>#}
-{#                </thead>#}
-{#                <tbody class="lh-copy">#}
-{#                {% for member in members %}#}
-{#                    <tr class="stripe-dark">#}
-{#                        <td class="pa3">{{ member }}</td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-{#        </div>#}
-{#    </div>#}
+    <br>
+    <h5>Add from your friends:</h5>
     <div class="pa4">
         <div class="overflow-auto">
             <table class="f6 w-100 mw8 center" cellspacing="0">
-                <thead>
-                <tr class="stripe-dark">
-                    <th class="fw6 tl pa3 bg-white"><h5>Available Users</h5></th>
-                </tr>
-                </thead>
                 <tbody class="lh-copy">
-                {% for user in users %}
+                {% if users %}
+                    {% for user in users %}
+                        <tr class="stripe-dark">
+                            <td class="pa3">{{ user }}</td>
+                            <td class="pa3">
+                                    <button class="btn btn-success" type="button" onclick="location.href='{% url 'add_user' group_id=group_id user_email=user.email %}'">Add To Group</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
                     <tr class="stripe-dark">
-                        <td class="pa3">{{ user }}</td>
-                    </tr>
-                {% endfor %}
+                            <td class="pa3">All your friends are in this group. Add some friends.</td>
+                        </tr>
+                {% endif %}
                 </tbody>
             </table>
         </div>
     </div>
+    <br>
+    <h5>Add other users to the group:</h5>
     <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
