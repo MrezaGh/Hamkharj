@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView
 from expense.models import Expense
 from .models import Group
 from users.models import CustomUser
-from .forms import AddToGroupForm, CreateGroupForm
+from .forms import AddToGroupForm, CreateGroupForm, GroupSettingsForm
 
 
 @login_required
@@ -45,18 +45,20 @@ class AddToGroup(View):
 
 class GroupSettings(View):
     template_name = "pages/group_update.html"
+    form_class = GroupSettingsForm
 
     def get(self, request, *args, **kwargs):
         g_id = kwargs.pop('group_id')
-        return render(request, self.template_name, {"members": self.members(g_id), "id": g_id})
+        form = self.form_class(request=request, g_id=g_id)
+        return render(request, self.template_name, {"form": form, "members": self.members(g_id), "id": g_id})
 
-    # def post(self, request, **kwargs):
-    #     g_id = kwargs.pop('group_id')
-    #     form = self.form_class(request.POST, request=request, g_id=g_id)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect("panel")
-    #     return render(request, self.template_name, {"form": form, "members": self.members(g_id), "users": self.users})
+    def post(self, request, **kwargs):
+        g_id = kwargs.pop('group_id')
+        form = self.form_class(request.POST, request=request, g_id=g_id)
+        if form.is_valid():
+            form.save()
+            return redirect("panel")
+        return render(request, self.template_name, {"form": form, "members": self.members(g_id), "users": self.users})
 
     def members(self, g_id):
         members = Group.objects.get(pk=g_id).users.all()
