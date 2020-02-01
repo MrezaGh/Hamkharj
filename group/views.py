@@ -41,3 +41,25 @@ class AddToGroup(View):
         members_email = [self.request.user.email] + [user.email for user in members]
         self.users = CustomUser.objects.exclude(email__in=members_email).all()
         return members_email
+
+
+class GroupSettings(View):
+    template_name = "pages/group_update.html"
+
+    def get(self, request, *args, **kwargs):
+        g_id = kwargs.pop('group_id')
+        return render(request, self.template_name, {"members": self.members(g_id), "id": g_id})
+
+    # def post(self, request, **kwargs):
+    #     g_id = kwargs.pop('group_id')
+    #     form = self.form_class(request.POST, request=request, g_id=g_id)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect("panel")
+    #     return render(request, self.template_name, {"form": form, "members": self.members(g_id), "users": self.users})
+
+    def members(self, g_id):
+        members = Group.objects.get(pk=g_id).users.all()
+        members_email = [self.request.user.email] + [user.email for user in members]
+        self.users = CustomUser.objects.exclude(email__in=members_email).all()
+        return members_email
