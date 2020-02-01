@@ -20,7 +20,7 @@
                         <td class="pa3">{{ member }}</td>
                         <td class="pa0">
                             <button class="btn btn-danger" type="button"
-                                        onclick="location.href='{% url 'panel' %}'"> delete
+                                        onclick="location.href='{% url 'delete_user' group_id=id user_email=member %}'"> delete
                             </button>
                         </td>
                     </tr>

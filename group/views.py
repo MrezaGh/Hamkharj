@@ -65,3 +65,15 @@ class GroupSettings(View):
         members_email = [self.request.user.email] + [user.email for user in members]
         self.users = CustomUser.objects.exclude(email__in=members_email).all()
         return members_email
+
+
+class DeleteUser(View):
+    def get(self, request, *args, **kwargs):
+        g_id = kwargs.pop('group_id')
+        group = Group.objects.get(pk=g_id)
+        user_email = kwargs.pop('user_email')
+
+        group.users.remove(CustomUser.objects.get(email=user_email))
+        group.save()
+
+        return redirect("group_settings", group_id=g_id)
