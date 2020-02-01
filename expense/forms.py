@@ -68,8 +68,9 @@ class ExpenseCreateForm(ExpenseForm):
 
     def save(self, **kwargs):
         expense = super(ExpenseCreateForm, self).save(**kwargs)
-        expense.location = Point(float(self.cleaned_data['longitude']), float(self.cleaned_data['latitude']))
-        expense.save(**kwargs)
+        if self.cleaned_data['latitude'] != '' and self.cleaned_data['longitude'] != '':
+            expense.location = Point(float(self.cleaned_data['longitude']), float(self.cleaned_data['latitude']))
+            expense.save(**kwargs)
         return expense
 
     class Meta:
