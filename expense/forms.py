@@ -1,6 +1,7 @@
 import re
 
 from django import forms
+from django.contrib.gis import forms as g_forms
 
 from expense.models import Expense, Record, ExpenseCategory
 from group.models import Group
@@ -47,15 +48,16 @@ class ExpenseCreateForm(ExpenseForm):
     def __init__(self, *args, **kwargs):
         gid = kwargs.pop("gid", None)
         self.group = Group.objects.get(pk=gid)
-        self.fields["creator"].choices = self.get_users()
         super(ExpenseCreateForm, self).__init__(*args, **kwargs)
+        self.fields["creator"].choices = self.get_users()
+        self.fields["location"] = g_forms.PointField()
 
     def get_users(self):
         return self.group.users.values_list('id', 'email')
 
     class Meta:
         model = Expense
-        fields = ["title", "amount", "category", "description", "expense_attachment", "creator"]
+        fields = ["title", "amount", "category", "description", "expense_attachment", "creator", "location"]
 
 
 class ExpenseUpdateForm(ExpenseForm):

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.gis.db import models as nm
 
 
 class Expense(models.Model):
@@ -28,6 +29,8 @@ class Expense(models.Model):
         blank=True,
         verbose_name='category'
     )
+
+    location = nm.PointField(null=True, blank=True, srid=4326)
 
 
 class Record(models.Model):
