@@ -38,7 +38,7 @@ class AddToGroup(View):
 
     def members(self, g_id):
         members = Group.objects.get(pk=g_id).users.all()
-        members_email = [self.request.user.email] + [user.email for user in members]
+        members_email = [user.email for user in members]
         self.users = CustomUser.objects.exclude(email__in=members_email).all()
         return members_email
 
@@ -62,7 +62,7 @@ class GroupSettings(View):
 
     def members(self, g_id):
         members = Group.objects.get(pk=g_id).users.all()
-        members_email = [self.request.user.email] + [user.email for user in members]
+        members_email = [user.email for user in members]
         self.users = CustomUser.objects.exclude(email__in=members_email).all()
         return members_email
 
