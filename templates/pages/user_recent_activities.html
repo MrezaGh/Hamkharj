@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %} Recent Activities {% endblock title %}
+
+{% block content %}
+    <div class="row">
+        {% for activity_type, activity_list in activities.items %}
+                {% if activity_list %}
+                    <div class="col-md-12">
+                        <h3>{{ activity_type }}</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead><tr><th>title</th><th>date/time</th><th>description</th></tr></thead>
+                                {% for activity in activity_list %}
+                                    <tr>
+                                        <td>{{ activity.object }}</td>
+                                        <td>{{ activity.datetime }}</td>
+                                        {% if activity.created %}
+                                            <td>created!</td>
+                                        {% else %}
+                                            <td>
+                                                {% for field, old_val, new_val in activity.modified_fields %}
+                                                    <p><strong>{{ field }}</strong>:
+                                                        {% if field == "expense_attachment" %}
+                                                            <a href="/media/{{ old_val }}">old pic</a>
+                                                            <i class="fas fa-arrow-circle-right"></i>
+                                                            <a href="/media/{{ new_val }}">new pic</a>
+                                                        {% else %}
+                                                            {{ old_val }}
+                                                            <i class="fas fa-arrow-circle-right"></i>
+                                                            {{ new_val }}
+                                                        {% endif %}
+                                                    </p>
+                                                {% endfor %}
+                                            </td>
+                                        {% endif %}
+
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <br>
+                    </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <button class="btn btn-default" type="button" onclick="location.href='{% url 'panel' %}'">back</button>
+{% endblock content %}
