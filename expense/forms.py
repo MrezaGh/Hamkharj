@@ -47,8 +47,8 @@ class ExpenseCreateForm(ExpenseForm):
     def __init__(self, *args, **kwargs):
         gid = kwargs.pop("gid", None)
         self.group = Group.objects.get(pk=gid)
-        self.fields["creator"].choices = self.get_users()
         super(ExpenseCreateForm, self).__init__(*args, **kwargs)
+        self.fields["creator"].choices = self.get_users()
 
     def get_users(self):
         return self.group.users.values_list('id', 'email')
