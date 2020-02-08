@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "debug_toolbar",
     "invitations",
+    "simple_history",
     # Local
     "users",
     "expense",
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware"
 ]
 
 ROOT_URLCONF = "hamkharj.urls"
