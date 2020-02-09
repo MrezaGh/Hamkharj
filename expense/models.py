@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.gis.db import models as nm
 
 from simple_history.models import HistoricalRecords
 
@@ -32,6 +33,8 @@ class Expense(models.Model):
         blank=True,
         verbose_name='category'
     )
+
+    location = nm.PointField(null=True, blank=True, srid=4326)
 
     def __str__(self):
         return self.title
