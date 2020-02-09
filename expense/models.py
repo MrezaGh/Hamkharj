@@ -2,8 +2,12 @@ from django.conf import settings
 from django.db import models
 from django.contrib.gis.db import models as nm
 
+from simple_history.models import HistoricalRecords
+
 
 class Expense(models.Model):
+    history = HistoricalRecords()
+
     title = models.CharField(max_length=200)
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL, models.CASCADE, related_name="creator"
@@ -32,8 +36,13 @@ class Expense(models.Model):
 
     location = nm.PointField(null=True, blank=True, srid=4326)
 
+    def __str__(self):
+        return self.title
+
 
 class Record(models.Model):
+    history = HistoricalRecords()
+
     expense = models.ForeignKey("Expense", models.CASCADE, related_name="records")
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, models.CASCADE, related_name="user"
@@ -51,6 +60,8 @@ class Record(models.Model):
 
 
 class ExpenseCategory(models.Model):
+    history = HistoricalRecords()
+
     title = models.CharField(max_length=50, verbose_name='title')
     group = models.ForeignKey(
         to='group.Group',
